@@ -19,6 +19,9 @@ import com.example.demo.model.persistence.repositories.ItemRepository;
 import com.example.demo.model.persistence.repositories.UserRepository;
 import com.example.demo.model.requests.ModifyCartRequest;
 
+/**
+ * Cart controller
+ */
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {
