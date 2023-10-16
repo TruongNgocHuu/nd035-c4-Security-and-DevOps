@@ -50,5 +50,5 @@ atlassian-ide-plugin.xml
 
 # VS Code
 .vscode/
-
+target/
 /starter-code/target/**

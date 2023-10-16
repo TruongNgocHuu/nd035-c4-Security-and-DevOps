@@ -1,10 +1,10 @@
 package com.example.demo.controllers;
 
-import java.security.SecureRandom;
-import java.util.Optional;
-
+import com.example.demo.utils.ObjectUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +23,10 @@ import com.example.demo.model.requests.CreateUserRequest;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-	
+	public static final Logger log = LogManager.getLogger(UserController.class);
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private CartRepository cartRepository;
 	@Autowired
@@ -34,17 +34,21 @@ public class UserController {
 
 	@GetMapping("/id/{id}")
 	public ResponseEntity<User> findById(@PathVariable Long id) {
+		log.info("findByUserName {}", ObjectUtils.objectToJson(id));
 		return ResponseEntity.of(userRepository.findById(id));
 	}
-	
+
 	@GetMapping("/{username}")
 	public ResponseEntity<User> findByUserName(@PathVariable String username) {
+		log.info("findByUserName {}", ObjectUtils.objectToJson(username));
 		User user = userRepository.findByUsername(username);
 		return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
 	}
-	
+
 	@PostMapping("/create")
 	public ResponseEntity<User> createUser(@RequestBody CreateUserRequest createUserRequest) {
+		log.info("createUser {}", ObjectUtils.objectToJson(createUserRequest));
+
 		User user = new User();
 		user.setUsername(createUserRequest.getUsername());
 		Cart cart = new Cart();
@@ -56,7 +60,9 @@ public class UserController {
 		}
 		user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPassword()));
 		userRepository.save(user);
+
+		log.debug(Level.WARN);
 		return ResponseEntity.ok(user);
 	}
-	
+
 }
